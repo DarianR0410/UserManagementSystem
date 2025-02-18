@@ -1,14 +1,23 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class UserManagement {
 	
+	int idUser;
 	String name;
 	String lastName;
-	String password;
-	String gmail;
+	String password = "Darian0110";
+	String gmail = "ram.darian@gmail.com";
 	int role;
+	
 	User user = new User(name, password, gmail, lastName);
 	Scanner scanner = new Scanner(System.in);
+	
+	
 	
 	
 	public String register(String gmail, String name, String lastName, String password) {
@@ -17,8 +26,15 @@ public class UserManagement {
 		System.out.println("**********************************");
 		System.out.println("To registe, please provide the following information: ");
 		
+		System.out.print("Enter your desired id (must begin with the current year: ");
+		role = scanner.nextInt();
+	
 		System.out.print("Name: ");
 		name = scanner.nextLine();
+		
+		if(name.equals(name)) {
+			
+		}
 		
 		System.out.print("Lastname: ");
 		lastName = scanner.nextLine();
@@ -57,7 +73,15 @@ public class UserManagement {
 		
 	}
 	
-	public String validation() {
+	public String validation(){
+		
+		try( Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/UserManagement", "root", "Darian0110*")){
+
+			Statement statement = conn.createStatement();
+		  ResultSet userLog = statement.executeQuery("Select * from user_log");
+				} catch(SQLException e) {
+					System.out.println("Couldn't make the connection");
+				}
 		
 		return "";
 		
