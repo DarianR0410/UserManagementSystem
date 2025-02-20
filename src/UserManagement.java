@@ -23,19 +23,16 @@ public class UserManagement {
         System.out.println("Welcome to our user management system");
         System.out.println("**********************************");
         System.out.println("To register, please provide the following information: ");
-    
-       
+ 
         System.out.print("Name: ");
         name = scanner.nextLine();
         
         System.out.print("Lastname: ");
         lastName = scanner.nextLine();
-
        
-        System.out.print("Enter your desired id (must begin with the current year): ");
+        System.out.print("Enter your id (must begin with the current year): ");
         idUser = scanner.nextInt();
         scanner.nextLine(); 
-
 
         while (!isEmailValid) {
             System.out.print("Email: ");
@@ -48,8 +45,7 @@ public class UserManagement {
                 System.out.println("Invalid email address. Please enter a valid email domain.");
             }
         }
-
-        // Role selection loop
+     
         while (!isRoleValid) {
             System.out.println("Select your role: ");
             System.out.println("1- User");

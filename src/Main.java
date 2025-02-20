@@ -11,8 +11,13 @@ public class Main {
 	
 		UserManagement userManagement = new UserManagement();
 		
-		
 		userManagement.register(password, name, lastName, email);
+		
+		
+		
+		
+		
+		
 		
 	}
 

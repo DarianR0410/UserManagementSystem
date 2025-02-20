@@ -1,18 +1,35 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DataBase {
-	{
 
-	try( Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/UserManagement", "root", "Darian0110*")){
 
-		Statement statement = conn.createStatement();
-	  ResultSet userLog = statement.executeQuery("Select * from user_log");
-			} catch(SQLException e) {
-				System.out.println("Couldn't make the connection");
-			}
+	public void insertUser(String name, String lastName, String email, String password, int idUser) {
+		try{
+			
+			String path = "jdbc:mysql://localhost:3306/UserManagement";
+			String username = "root";
+			String dbpassword = "Darian0110*";
+			
+			Connection conn = DriverManager.getConnection(path, username, dbpassword);
+			
+			String insertSql = "Insert into user_log(id_user, name, last_name, gmail, password) values (?, ? , ?, ?, ?)";
+			PreparedStatement prepStmt = conn.prepareStatement(insertSql);
+			prepStmt.setInt(1, idUser);
+			prepStmt.setString(2, name);
+			prepStmt.setString(3, lastName);
+			prepStmt.setString(4, email);
+			prepStmt.setString(5, password);
+			
+			prepStmt.close();
+			
+				} catch(SQLException e) {
+					System.out.println("Couldn't make the connection");
+				}
 	}
+
+
 }
+   
