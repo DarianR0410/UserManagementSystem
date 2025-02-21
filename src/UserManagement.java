@@ -5,18 +5,15 @@ public class UserManagement {
     int idUser;
     String name;
     String lastName;
-    String password = "Darian0110";
-    String email = "ram.darian@gmail.com";
-    int role;
-    boolean isRoleValid = false;
-    boolean isEmailValid = false;
+    String password;
+    String email;
+    String role;
+    boolean isValid = false;
     boolean isPasswordValid = false;
 
-    User user = new User(name, password, email, lastName);
     Scanner scanner = new Scanner(System.in);
 
-    public void register(String email, String name, String lastName, String password) {
-
+    public void register() {
         UserValidation userValidation = new UserValidation();
 
         System.out.println("**********************************");
@@ -24,54 +21,48 @@ public class UserManagement {
         System.out.println("**********************************");
         System.out.println("To register, please provide the following information: ");
  
-        System.out.print("Name: ");
-        name = scanner.nextLine();
-        
-        System.out.print("Lastname: ");
-        lastName = scanner.nextLine();
-       
-        System.out.print("Enter your id (must begin with the current year): ");
-        idUser = scanner.nextInt();
-        scanner.nextLine(); 
-
-        while (!isEmailValid) {
+        while (!isValid) {
+            System.out.print("Name: ");
+            name = scanner.nextLine();
+            System.out.print("Lastname: ");
+            lastName = scanner.nextLine();
+           
+            System.out.print("Enter your id (must begin with the current year): ");
+            idUser = scanner.nextInt();
+            scanner.nextLine(); 
+            
             System.out.print("Email: ");
             email = scanner.nextLine();
             try {
-                userValidation.emailValidation(email);  
-                isEmailValid = true;  
+                userValidation.emailValidation(email);   
                 System.out.println("Email successfully validated and stored.");
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid email address. Please enter a valid email domain.");
+                continue; 
             }
-        }
-     
-        while (!isRoleValid) {
-            System.out.println("Select your role: ");
+
+            System.out.println("Please select your role: ");
             System.out.println("1- User");
             System.out.println("2- Moderator");
             System.out.println("3- Administrator");
-            role = scanner.nextInt();
-            scanner.nextLine();
 
-            switch (role) {
-                case 1:
-                    System.out.println("You selected the user role.");
-                    isRoleValid = true;
-                    break;
-                case 2:
-                    System.out.println("You selected the moderator role.");
-                    isRoleValid = true;
-                    break;
-                case 3:
-                    System.out.println("You selected the administrator role.");
-                    isRoleValid = true;
-                    break;
+            int roleOption = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (roleOption) {
+                case 1:role = "User";
+                break;
+                case 2: role = "Moderator";
+                break;
+                case 3: role = "Administrator";
+                break;
                 default:
-                    System.out.println("ERROR, please select an available role.");
+                    System.out.println("Invalid role selection. Please select 1, 2, or 3.");
+                    continue; 
             }
-        }
 
+            isValid = true; 
+        }
 
         while (!isPasswordValid) {
             System.out.print("Password: ");
@@ -84,10 +75,36 @@ public class UserManagement {
                 System.out.println("Invalid password. Please ensure it meets all the requirements.");
             }
         }
+
         
-        
+        DataBase db = new DataBase();
+        db.insertUser(name, lastName, email, password, idUser);
+        db.insertRole(role);
+
         System.out.println("You have successfully registered.");
     }
+    
+    public void LogIn() {
+    	
+        System.out.println("**********************************");
+        System.out.println("Welcome to our user management system");
+        System.out.println("**********************************");
+        System.out.println("To Log in, please provide the following information: ");
+    	
+    	System.out.print("Email: ");
+    	String email = scanner.nextLine();
+    	
+    	System.out.print("Password: ");
+    	String password = scanner.nextLine();
+    	
+    	DataBase db = new DataBase();
+    	db.LogIn(email, password);
+    	
+    	
+    }
 }
+
+    
+
 
 	

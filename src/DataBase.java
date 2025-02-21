@@ -1,35 +1,155 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DataBase {
 
-
+	int idUser;
+	String name;
+	String lastName;
+	String password;
+	String email = "ram.darian@gmail.com";
+	String role;
+	
 	public void insertUser(String name, String lastName, String email, String password, int idUser) {
+		
+		Connection conn = null;
+		PreparedStatement prepStmt = null;
+		
 		try{
 			
 			String path = "jdbc:mysql://localhost:3306/UserManagement";
 			String username = "root";
 			String dbpassword = "Darian0110*";
 			
-			Connection conn = DriverManager.getConnection(path, username, dbpassword);
+			conn = DriverManager.getConnection(path, username, dbpassword);
 			
 			String insertSql = "Insert into user_log(id_user, name, last_name, gmail, password) values (?, ? , ?, ?, ?)";
-			PreparedStatement prepStmt = conn.prepareStatement(insertSql);
+			prepStmt = conn.prepareStatement(insertSql);
+			
 			prepStmt.setInt(1, idUser);
 			prepStmt.setString(2, name);
 			prepStmt.setString(3, lastName);
 			prepStmt.setString(4, email);
 			prepStmt.setString(5, password);
 			
-			prepStmt.close();
+			int rows = prepStmt.executeUpdate();
+			System.out.println(rows + " rows inserted into the database");
+			
 			
 				} catch(SQLException e) {
-					System.out.println("Couldn't make the connection");
+					System.out.println("Couldn't insert the information "+ e.getMessage());
+				} finally {
+					
+					try {
+						if(prepStmt != null) {
+							prepStmt.close();
+						}
+						
+						if (conn != null) {
+							conn.close();
+						}
+						
+					} catch (SQLException e) {
+						System.out.println("ERROR FOUND! Closing all resourses "+ e.getMessage());
+					}
 				}
 	}
 
-
+	
+	public void insertRole (String roleName) {
+		
+		Connection conn = null;
+		PreparedStatement prepStmt = null;
+		
+		try {
+		String path = "jdbc:mysql://localhost:3306/UserManagement";
+		String username = "root";
+		String dbpassword = "Darian0110*";
+		
+		conn = DriverManager.getConnection(path, username, dbpassword);
+		
+		String insertvalue = "insert into role_user (role_name) values(?) ";
+		
+		prepStmt = conn.prepareStatement(insertvalue);
+		
+		prepStmt.setString(1, roleName);
+		
+		int rowsAffected = prepStmt.executeUpdate();
+		System.out.println(rowsAffected + " has been  affected");
+		
+		} catch (SQLException e) {
+			System.out.println("Couldn't make the connection");
+		} finally {
+			
+			try {
+				if (prepStmt != null) {
+					prepStmt.close();
+				}
+				
+				if (conn != null) {
+					conn.close();
+				}
+				
+			} catch (SQLException e) {
+				System.out.println("ERROR FOUND! Unable to connect "+ e.getMessage());
+			}
+		}
+	}
+	
+	public void LogIn(String email, String password) {
+		
+		Connection conn = null;
+		PreparedStatement prepStmt = null;
+		
+		try {
+			String path = "jdbc:mysql://localhost:3306/UserManagement";
+			String username = "root";
+			String dbpassword = "Darian0110";
+			
+			conn = DriverManager.getConnection(path, username, dbpassword);
+			
+			String sqlValue = "select * from user_log where email = ? and password = ?";
+			
+			prepStmt = conn.prepareStatement(sqlValue);
+			
+			prepStmt.setString(1, email);
+			prepStmt.setString(2, password);
+			
+			
+			ResultSet rs = prepStmt.executeQuery();
+			
+			if(rs.next()) {
+				System.out.println("log in successful");
+			} else {
+				System.out.println("Invalid information, please check email or password");
+			}
+			
+		} catch (SQLException e) {
+			
+			System.out.println("Unable to connect to the database");
+			
+		} finally {
+			
+			try {
+			if(prepStmt != null) {
+				prepStmt.close();
+			}
+			
+			if(conn != null) {
+				conn.close();
+			}
+			
+			} catch (SQLException e) {
+				System.out.println("ERROR FOUND! unable to connect" + e.getMessage());
+			}
+		}
+		
+		
+		
+		
+	}
 }
    

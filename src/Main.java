@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 public class Main {
 
@@ -8,13 +9,22 @@ public class Main {
 		String email = "";
 		String password = "";
 		
-	
+		
+		Scanner scanner = new Scanner(System.in);
 		UserManagement userManagement = new UserManagement();
 		
-		userManagement.register(password, name, lastName, email);
+	
+		System.out.println("***************************");
+		System.out.println("Welcome to our user management system!");
+		System.out.println("***************************");
+		System.out.println("What would you like to do today? ");
+		System.out.println("1- Sign in");
+		System.out.println("2- Log in");
+		int option = scanner.nextInt();
 		
 		
 		
+		userManagement.LogIn();
 		
 		
 		
