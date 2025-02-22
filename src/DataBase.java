@@ -107,11 +107,11 @@ public class DataBase {
 		try {
 			String path = "jdbc:mysql://localhost:3306/UserManagement";
 			String username = "root";
-			String dbpassword = "Darian0110";
+			String dbpassword = "Darian0110*";
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String sqlValue = "select * from user_log where email = ? and password = ?";
+			String sqlValue = "select * from user_log where gmail = ? and password = ?";
 			
 			prepStmt = conn.prepareStatement(sqlValue);
 			
@@ -129,7 +129,7 @@ public class DataBase {
 			
 		} catch (SQLException e) {
 			
-			System.out.println("Unable to connect to the database");
+			System.out.println("Unable to connect to the database: " + e.getMessage());
 			
 		} finally {
 			

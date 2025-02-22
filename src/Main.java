@@ -22,10 +22,11 @@ public class Main {
 		System.out.println("2- Log in");
 		int option = scanner.nextInt();
 		
+		switch(option) {
 		
-		
-		userManagement.LogIn();
-		
+		case 1: userManagement.register();
+		case 2: userManagement.LogIn();
+		}
 		
 		
 		

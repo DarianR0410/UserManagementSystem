@@ -16,9 +16,6 @@ public class UserManagement {
     public void register() {
         UserValidation userValidation = new UserValidation();
 
-        System.out.println("**********************************");
-        System.out.println("Welcome to our user management system");
-        System.out.println("**********************************");
         System.out.println("To register, please provide the following information: ");
  
         while (!isValid) {
@@ -86,9 +83,6 @@ public class UserManagement {
     
     public void LogIn() {
     	
-        System.out.println("**********************************");
-        System.out.println("Welcome to our user management system");
-        System.out.println("**********************************");
         System.out.println("To Log in, please provide the following information: ");
     	
     	System.out.print("Email: ");
