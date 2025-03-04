@@ -10,7 +10,7 @@ public class DataBase {
 	String name;
 	String lastName;
 	String password;
-	String email = "ram.darian@gmail.com";
+	String email;
 	String role;
 	
 	public void insertUser(String name, String lastName, String email, String password, int idUser) {
@@ -150,6 +150,51 @@ public class DataBase {
 		
 		
 		
+	}
+	
+	public void createTrigger() {
+		Connection conn = null;
+		PreparedStatement prepStmt = null;
+		
+		try {
+			String path = "jdbc:mysql://localhost:3306/UserManagement";
+			String username = "root";
+			String dbpassword = "Darian0110*";
+			
+			conn = DriverManager.getConnection(path, username, dbpassword);
+			
+			String sqlQuery = """
+					create trigger log_sign_in
+					after insert on user_log
+					for each row 
+					insert into session_history (id_user, login_time, logout_time)
+					values (new.id, now(), null);
+					""";
+					
+			
+			prepStmt = conn.prepareStatement(sqlQuery);
+			
+			prepStmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			
+			System.out.println("ERROR! Couldn't save the information");
+		} finally {
+			
+			try {
+			if(conn != null) {
+				conn.close();
+			}
+			
+			if(prepStmt != null) {
+				prepStmt.close();
+			}
+			
+			} catch(SQLException e) {
+				System.out.println("UNABLE TO MAKE THE CONNECTION! Clossing all resources " + e.getMessage());
+			}
+			
+		}
 	}
 }
    

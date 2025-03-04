@@ -8,10 +8,12 @@ public class UserManagement {
     String password;
     String email;
     String role;
+    String hashedPassword;
     boolean isValid = false;
     boolean isPasswordValid = false;
 
     Scanner scanner = new Scanner(System.in);
+    DataBase db = new DataBase();
 
     public void register() {
         UserValidation userValidation = new UserValidation();
@@ -60,12 +62,15 @@ public class UserManagement {
 
             isValid = true; 
         }
+        
+        
 
         while (!isPasswordValid) {
             System.out.print("Password: ");
             password = scanner.nextLine();
             try {
-                userValidation.passwordValidation(password);  
+                userValidation.passwordValidation(password);
+               hashedPassword = userValidation.hashpassword(password);
                 isPasswordValid = true;  
                 System.out.println("Password successfully validated.");
             } catch (IllegalArgumentException e) {
@@ -74,14 +79,15 @@ public class UserManagement {
         }
 
         
-        DataBase db = new DataBase();
-        db.insertUser(name, lastName, email, password, idUser);
+        db.insertUser(name, lastName, email, hashedPassword, idUser);
         db.insertRole(role);
 
         System.out.println("You have successfully registered.");
     }
     
     public void LogIn() {
+    	
+    	UserValidation userValidation = new UserValidation();
     	
         System.out.println("To Log in, please provide the following information: ");
     	
@@ -91,9 +97,10 @@ public class UserManagement {
     	System.out.print("Password: ");
     	String password = scanner.nextLine();
     	
-    	DataBase db = new DataBase();
-    	db.LogIn(email, password);
+    	db.LogIn(email, hashedPassword);
+    	userValidation.viewPassword(password, hashedPassword);
     	
+
     	
     }
 }

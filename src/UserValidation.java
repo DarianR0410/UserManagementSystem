@@ -1,6 +1,7 @@
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 public class UserValidation {
@@ -9,7 +10,7 @@ public class UserValidation {
 	String name;
 	String lastName;
 	String password;
-	String email = "ram.darian@gmail.com";
+	String email;
 	int role;
 	
 	User user = new User(name, password, email, lastName);
@@ -58,6 +59,22 @@ public class UserValidation {
 		}
 				
 	};
+	
+	
+	public String hashpassword(String password) {
+		
+		return BCrypt.hashpw(password, BCrypt.gensalt());
+		
+	};
+	
+	public void viewPassword(String password, String hashedPassword) {
+		if(BCrypt.checkpw(password, hashedPassword)) {
+			
+			System.out.println("The password has been successfully validated");
+		} else {
+			System.out.println("Incorrect password, please check.");
+		}
+	}
 	
 	
 }
