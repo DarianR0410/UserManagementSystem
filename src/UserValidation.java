@@ -62,9 +62,8 @@ public class UserValidation {
 	
 	
 	public String hashpassword(String password) {
-		
+			
 		return BCrypt.hashpw(password, BCrypt.gensalt());
-		
 	};
 	
 	public void viewPassword(String password, String hashedPassword) {

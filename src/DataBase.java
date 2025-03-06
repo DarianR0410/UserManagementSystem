@@ -111,7 +111,7 @@ public class DataBase {
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String sqlValue = "select * from user_log where gmail = ? and password = ?";
+			String sqlValue = "select from user_log (gmail, password) where gmail = ? and password = ?";
 			
 			prepStmt = conn.prepareStatement(sqlValue);
 			
@@ -120,6 +120,8 @@ public class DataBase {
 			
 			
 			ResultSet rs = prepStmt.executeQuery();
+			
+			rs.close();
 			
 			if(rs.next()) {
 				System.out.println("log in successful");
@@ -142,6 +144,8 @@ public class DataBase {
 				conn.close();
 			}
 			
+			
+			
 			} catch (SQLException e) {
 				System.out.println("ERROR FOUND! unable to connect" + e.getMessage());
 			}
@@ -152,7 +156,8 @@ public class DataBase {
 		
 	}
 	
-	public void createTrigger() {
+	public void LogInHistory() {
+		
 		Connection conn = null;
 		PreparedStatement prepStmt = null;
 		
@@ -163,18 +168,25 @@ public class DataBase {
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String sqlQuery = """
-					create trigger log_sign_in
-					after insert on user_log
-					for each row 
-					insert into session_history (id_user, login_time, logout_time)
-					values (new.id, now(), null);
-					""";
-					
+			String selectId = "select id_user from user_log where id = ?";
+			prepStmt = conn.prepareStatement(selectId);
+			prepStmt.setString(1, email);
+			ResultSet rs = prepStmt.executeQuery();
 			
-			prepStmt = conn.prepareStatement(sqlQuery);
+			int idUser = -1;
+			if(rs.next()) {
+				idUser = rs.getInt("idUser");
+			}
 			
-			prepStmt.executeUpdate();
+			if(idUser != -1) {
+				String sqlQuery = "insert into session_history (id_user, login_time, logout_time) values ( ?, now(), null)";
+				prepStmt = conn.prepareStatement(sqlQuery);
+				prepStmt.setInt(1, idUser);
+				prepStmt.executeUpdate();
+			} else {
+				System.err.println("Unable to find the user");
+			}
+			
 			
 		} catch(SQLException e) {
 			
@@ -196,5 +208,6 @@ public class DataBase {
 			
 		}
 	}
+
 }
    

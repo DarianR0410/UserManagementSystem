@@ -97,12 +97,19 @@ public class UserManagement {
     	System.out.print("Password: ");
     	String password = scanner.nextLine();
     	
-    	db.LogIn(email, hashedPassword);
+    	db.LogIn(email, password);
+    	hashedPassword = userValidation.hashpassword(password);
     	userValidation.viewPassword(password, hashedPassword);
+    	db.LogInHistory();
     	
+    	System.out.println("Successful Log in.");
 
     	
     }
+    
+    
+    public void LogOut() {
+}
 }
 
     
