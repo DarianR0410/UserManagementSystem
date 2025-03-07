@@ -126,6 +126,10 @@ public class DataBase {
 				String hashedPassword = rs.getString("password");
 				
 				if(userValidation.viewPassword(password, hashedPassword)) {
+					String updateTime = "update user_log set last_login = now() where gmail = ?";
+					prepStmt = conn.prepareStatement(updateTime);
+					prepStmt.setString(1, email);
+					prepStmt.executeUpdate();
 					System.out.println("Log in successful.");
 				} else {
 					System.out.println("Invalid information, unable to log in.");
@@ -174,27 +178,19 @@ public class DataBase {
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String selectId = "select id_user from user_log where gmail = ?";
-			prepStmt = conn.prepareStatement(selectId);
-			prepStmt.setString(1, email);
-			ResultSet rs = prepStmt.executeQuery();
+			String logInTrigger = """
+					create trigger after__login
+					after update on user_log
+					for each row 
+					begin
+					 if new.last_login != old.last_login then
+					 insert into session_history (id_user, login_time, logout_time)
+					 values (new.id_user, now(), null);
+					 end if;
+					 end
+					""";
 			
-			int idUser = -1;
-			if(rs.next()) {
-				System.out.println("User: " + rs.getInt("id_user"));
-				idUser = rs.getInt("id_user");
-			} else {
-				System.out.println("No user found with the email address: " + email);
-			}
-			
-			if(idUser != -1) {
-				String sqlQuery = "insert into session_history (id_user, login_time, logout_time) values ( ?, now(), null)";
-				prepStmt = conn.prepareStatement(sqlQuery);
-				prepStmt.setInt(1, idUser);
-				prepStmt.executeUpdate();
-			} else {
-				System.out.println("Unable to find the user");
-			}
+			prepStmt = conn.prepareStatement(logInTrigger);
 			
 			
 		} catch(SQLException e) {
