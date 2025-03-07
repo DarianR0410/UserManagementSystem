@@ -66,12 +66,14 @@ public class UserValidation {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	};
 	
-	public void viewPassword(String password, String hashedPassword) {
+	public boolean viewPassword(String password, String hashedPassword) {
 		if(BCrypt.checkpw(password, hashedPassword)) {
 			
-			System.out.println("The password has been successfully validated");
+			return true;
+			
 		} else {
 			System.out.println("Incorrect password, please check.");
+			return false;
 		}
 	}
 	

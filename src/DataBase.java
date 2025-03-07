@@ -101,6 +101,7 @@ public class DataBase {
 	
 	public void LogIn(String email, String password) {
 		
+		UserValidation userValidation = new UserValidation();
 		Connection conn = null;
 		PreparedStatement prepStmt = null;
 		
@@ -111,20 +112,25 @@ public class DataBase {
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String sqlValue = "select from user_log (gmail, password) where gmail = ? and password = ?";
+			String sqlValue = "select password from user_log where gmail = ?";
 			
 			prepStmt = conn.prepareStatement(sqlValue);
 			
 			prepStmt.setString(1, email);
-			prepStmt.setString(2, password);
-			
 			
 			ResultSet rs = prepStmt.executeQuery();
 			
-			rs.close();
 			
 			if(rs.next()) {
-				System.out.println("log in successful");
+				
+				String hashedPassword = rs.getString("password");
+				
+				if(userValidation.viewPassword(password, hashedPassword)) {
+					System.out.println("Log in successful.");
+				} else {
+					System.out.println("Invalid information, unable to log in.");
+				}
+
 			} else {
 				System.out.println("Invalid information, please check email or password");
 			}
@@ -156,7 +162,7 @@ public class DataBase {
 		
 	}
 	
-	public void LogInHistory() {
+	public void LogInHistory(String email) {
 		
 		Connection conn = null;
 		PreparedStatement prepStmt = null;
@@ -168,14 +174,17 @@ public class DataBase {
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String selectId = "select id_user from user_log where id = ?";
+			String selectId = "select id_user from user_log where gmail = ?";
 			prepStmt = conn.prepareStatement(selectId);
 			prepStmt.setString(1, email);
 			ResultSet rs = prepStmt.executeQuery();
 			
 			int idUser = -1;
 			if(rs.next()) {
-				idUser = rs.getInt("idUser");
+				System.out.println("User: " + rs.getInt("id_user"));
+				idUser = rs.getInt("id_user");
+			} else {
+				System.out.println("No user found with the email address: " + email);
 			}
 			
 			if(idUser != -1) {
@@ -184,7 +193,7 @@ public class DataBase {
 				prepStmt.setInt(1, idUser);
 				prepStmt.executeUpdate();
 			} else {
-				System.err.println("Unable to find the user");
+				System.out.println("Unable to find the user");
 			}
 			
 			

@@ -99,10 +99,10 @@ public class UserManagement {
     	
     	db.LogIn(email, password);
     	hashedPassword = userValidation.hashpassword(password);
-    	userValidation.viewPassword(password, hashedPassword);
-    	db.LogInHistory();
+    	System.out.println("You're currently logged in.");
+    	db.LogInHistory(email);
     	
-    	System.out.println("Successful Log in.");
+    	
 
     	
     }
