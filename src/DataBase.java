@@ -160,59 +160,50 @@ public class DataBase {
 				System.out.println("ERROR FOUND! unable to connect" + e.getMessage());
 			}
 		}
-		
-		
-		
-		
+	
 	}
 	
-	public void LogInHistory(String email) {
-		
-		Connection conn = null;
-		PreparedStatement prepStmt = null;
-		
-		try {
+	public void LogOut(String email) {
+		 Connection conn = null;
+		 PreparedStatement prepStmt = null;
+		 
+		 try{
+			 
 			String path = "jdbc:mysql://localhost:3306/UserManagement";
 			String username = "root";
 			String dbpassword = "Darian0110*";
 			
 			conn = DriverManager.getConnection(path, username, dbpassword);
 			
-			String logInTrigger = """
-					create trigger after__login
-					after update on user_log
-					for each row 
-					begin
-					 if new.last_login != old.last_login then
-					 insert into session_history (id_user, login_time, logout_time)
-					 values (new.id_user, now(), null);
-					 end if;
-					 end
-					""";
+			String sqlUpdate = "update user_log set last_logout = now() where gmail = ?";
 			
-			prepStmt = conn.prepareStatement(logInTrigger);
+			prepStmt = conn.prepareStatement(sqlUpdate);
 			
+			prepStmt.setString(1, email);
+			int rows = prepStmt.executeUpdate();
 			
-		} catch(SQLException e) {
-			
-			System.out.println("ERROR! Couldn't save the information");
-		} finally {
-			
+			if(rows > 0) {
+				System.out.println("Successfully logged out: " + email);
+			} else {
+				System.out.println("No active session: " + email);
+			}
+			 
+		 } catch(SQLException e) {
+			 System.out.println("ERROR! Unable to process the request.");
+		 } finally {
 			try {
-			if(conn != null) {
-				conn.close();
-			}
-			
-			if(prepStmt != null) {
-				prepStmt.close();
-			}
-			
+				 if(prepStmt != null) {
+					 prepStmt.close();
+				 }
+				 
+				 if (conn != null) {
+					 conn.close();
+				 }
+ 
 			} catch(SQLException e) {
-				System.out.println("UNABLE TO MAKE THE CONNECTION! Clossing all resources " + e.getMessage());
+				System.out.println("SOMETHING WENT WRONG! Clossing the connection with the database.");
 			}
-			
-		}
+		 }
+		 
 	}
-
 }
-   

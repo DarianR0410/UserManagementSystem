@@ -20,12 +20,14 @@ public class Main {
 		System.out.println("What would you like to do today? ");
 		System.out.println("1- Sign in");
 		System.out.println("2- Log in");
+		System.out.println("3- Log out");
 		int option = scanner.nextInt();
 		
 		switch(option) {
 		
 		case 1: userManagement.register();
 		case 2: userManagement.LogIn();
+		case 3: userManagement.LogOut(email);
 		}
 		
 		

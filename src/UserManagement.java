@@ -100,16 +100,28 @@ public class UserManagement {
     	db.LogIn(email, password);
     	hashedPassword = userValidation.hashpassword(password);
     	System.out.println("You're currently logged in.");
-    	db.LogInHistory(email);
     	
-    	
-
     	
     }
     
     
-    public void LogOut() {
+    public void LogOut(String email) {
+    	
+    	System.out.println("Would you like to log out? (YES/NO)");
+    	String option = scanner.nextLine().toUpperCase();
+    	
+    	if(option.equals("YES")) {
+    		
+    		db.LogOut(email);
+    		System.out.println("You have successfully logged out.");
+    		
+    	} else {
+    		System.out.println("Keeping the session open.");
+    	}
+    	
+    	
 }
+    
 }
 
     
